@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>Reddit 영어 댓글 교정 | 형광펜 비교 노트</title>
+<style>
+:root{--ink:#1f2b33;--inksoft:#627079;--line:#e8edf0;--yellow:#fff177;--green:#b6ff92;--coral:#f85b75;--teal:#13865a;--page:#ffffff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Segoe UI",Arial,sans-serif;font-synthesis:none;line-height:1.65;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #68a6fb;outline-offset:3px}
+.container{max-width:1120px;margin:0 auto;padding:0 26px}
+.topbar{border-bottom:1px solid var(--line);background:rgba(255,255,255,.98)}
+.topbar .inner{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{font-size:14px;letter-spacing:.03em;font-weight:850;display:flex;align-items:center;gap:10px}
+.brand-icon{display:inline-flex;align-items:center;justify-content:center;width:31px;height:31px;border:1px solid #dbe7b0;border-radius:10px;background:#f8ffdd;font-weight:900;color:#5c7236}
+.url{font-size:12px;color:#72808a;text-decoration:none;white-space:nowrap}.url:hover{text-decoration:underline}
+.hero{padding:58px 0 30px;border-bottom:1px solid #f4f5f6}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.18em;color:#5f7a45;margin:0 0 12px}
+h1{font-size:clamp(29px,4.2vw,47px);line-height:1.24;letter-spacing:-.045em;margin:0 0 18px;font-weight:880}
+h1 .stroke{background:linear-gradient(transparent 59%,var(--yellow) 59%,var(--yellow) 91%,transparent 91%);padding:0 3px}
+.lead{max-width:800px;margin:0;font-size:16px;color:#51626b;line-height:1.84}
+.meta{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:24px;color:#63727a;font-size:13px}
+.meta strong{font-size:14px;color:#17252c}.meta .sep{width:3px;height:3px;border-radius:100%;background:#b8c0c6}
+.legend{display:flex;gap:12px 24px;flex-wrap:wrap;margin:30px 0 0;padding:17px 20px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:13px;color:#35424b}
+.legend span{display:inline-flex;gap:8px;align-items:center}
+.legend .chip{display:inline-block;width:28px;height:12px;border-radius:3px}
+.legend .chip.yellow{background:var(--yellow)}.legend .chip.green{background:var(--green)}.legend .chip.strike{position:relative;background:#ffdce0}.legend .chip.strike:after{content:"";display:block;position:absolute;top:5px;width:100%;height:2px;background:var(--coral)}
+.toolbar{position:sticky;top:0;z-index:9;border-bottom:1px solid #edf0f2;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.toolinner{padding-top:13px;padding-bottom:13px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.search-wrap{display:flex;align-items:center;gap:10px;border:1px solid #e1e7ea;border-radius:10px;padding:0 12px;width:min(100%,355px);height:42px;color:#77838b;background:#fff}
+.search-wrap svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.search-wrap input{background:transparent;border:0;min-width:0;width:100%;outline:none;color:#1c3038;font-size:13px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filter-btn{border:1px solid #e1e7eb;background:#fff;color:#52616a;padding:8px 12px;border-radius:9px;font-size:12px;font-weight:700;transition:.15s ease}
+.filter-btn.active{background:#eefad9;border-color:#d6eab1;color:#3d6428}
+.tools-right{display:flex;align-items:center;gap:8px}
+.action{border:1px solid #dfe5e8;background:white;color:#3f5058;font-weight:750;font-size:12px;padding:9px 13px;border-radius:9px}
+.action:hover,.filter-btn:hover{border-color:#b2c4bc}
+.results{font-size:12px;color:#849099;white-space:nowrap;margin-right:4px}
+.main{padding-top:36px;padding-bottom:40px}
+.section-line{display:flex;gap:15px;justify-content:space-between;align-items:baseline;margin:0 0 17px}
+h2{font-size:22px;margin:0;letter-spacing:-.035em}
+.small-sub{font-size:12px;color:#8c969d}
+.cards{display:grid;gap:15px}
+.review-card{scroll-margin-top:110px;background:#fff;border:1px solid #e5e9ec;border-radius:15px;overflow:hidden;box-shadow:0 4px 20px rgba(22,42,52,.027)}
+.card-top{padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top-left{display:flex;align-items:center;gap:12px}
+.number{font-family:ui-monospace,"SFMono-Regular",Consolas,monospace;font-weight:780;font-size:12px;color:#8b9b9e}
+.category{font-size:12px;font-weight:750;color:#42535b}
+.level{font-size:11px;color:#929aa0}
+.comparison{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #f3f5f6;border-bottom:1px solid #f1f3f5}
+.sentence-block{padding:18px 21px 24px;min-width:0}
+.sentence-block+.sentence-block{border-left:1px solid #edf0f2}
+.sentence-head{font-size:12px;font-weight:750;letter-spacing:.005em;color:#6e7a82;display:flex;align-items:center;gap:8px;min-height:24px;margin-bottom:14px}
+.mini-dot{border-radius:50%;width:8px;height:8px;display:inline-block;flex:none}.dot-yellow{background:#e4cc14}.dot-green{background:#6ac842}
+.sentence{margin:0;font-size:16px;font-weight:590;line-height:2.1;letter-spacing:-.012em;overflow-wrap:anywhere;word-break:normal}
+.sentence mark{color:inherit;-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:2px 4px;border-radius:3px}
+.fluoro-yellow{background:linear-gradient(transparent 5%,rgba(255,241,119,.82) 5%,rgba(255,241,119,.82) 93%,transparent 93%)}
+.fluoro-green{background:linear-gradient(transparent 5%,rgba(182,255,146,.70) 5%,rgba(182,255,146,.70) 93%,transparent 93%)}
+del.removed{color:#86666a;text-decoration:line-through;text-decoration-color:#ee3155;text-decoration-thickness:2px;text-decoration-skip-ink:none;background:rgba(255,139,146,.30);border-radius:3px;padding:2px 0}
+ins.added{text-decoration:none;background:#a7ff74;box-shadow:0 1px 0 rgba(23,147,78,.22);font-weight:790;border-radius:3px;padding:2px 1px;color:#164f35}
+.copy-btn{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid #e0e8e5;background:#fff;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:700;color:#4b7460;line-height:1.4}
+.copy-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.copy-btn:hover{background:#f5fff1}
+.tip{display:flex;align-items:flex-start;gap:10px;padding:13px 21px 16px;color:#5c6972;font-size:13px}
+.tip-symbol{font-weight:850;color:#81a63f;line-height:1.7;flex:none}
+.bonus{border:1px solid #dfe8e6;border-radius:15px;margin-top:38px;padding:24px 26px 26px;background:#fff}
+.bonus-label{font-size:11px;color:#527a50;text-transform:uppercase;letter-spacing:.16em;font-weight:850}.bonus h2{margin:8px 0 3px}
+.bonus .comparison{border:1px solid #edf0f2;border-radius:11px;margin-top:17px}
+.bonus p.caption{font-size:13px;color:#78838b;margin:14px 0 0}
+.learning{margin:30px 0 0;padding:22px 25px;background:#fff;border:1px solid #e9edef;border-radius:15px}
+.learning h2{font-size:19px;margin:0 0 13px}.learning-list{display:grid;grid-template-columns:repeat(2,1fr);gap:15px 25px}
+.learning-item{font-size:13px;color:#53636a}.learning-item strong{display:block;color:#273941;font-size:14px;margin-bottom:2px}.learning-item code{font-family:inherit;font-weight:700;background:#f7faec;padding:1px 5px;border-radius:4px}
+.footer{border-top:1px solid #eef0f1;padding:20px 0 40px;font-size:12px;color:#8c999f}
+.empty{display:none;text-align:center;padding:45px;color:#738189;border:1px dashed #cad3d8;border-radius:16px}
+.toast{position:fixed;bottom:24px;left:50%;z-index:30;transform:translate(-50%,20px);padding:10px 16px;background:#1f3b2e;color:#fff;border-radius:10px;box-shadow:0 10px 35px #0002;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+.hide-highlights .sentence mark{background:none!important;padding:0!important}.hide-highlights del.removed{background:none!important}.hide-highlights ins.added{background:none!important;box-shadow:none!important}
+@media(max-width:920px){.toolinner{justify-content:flex-start}.tools-right{margin-left:auto}}
+@media(max-width:700px){.container{padding:0 16px}.hero{padding:39px 0 23px}.lead{font-size:14px}.meta{margin-top:18px}.legend{gap:12px;padding:14px}.toolbar{position:relative}.toolinner{padding:12px 0}.search-wrap{width:100%}.filters{order:2;width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}.filter-btn{flex:none}.tools-right{order:3;width:100%;justify-content:flex-end}.comparison{grid-template-columns:1fr}.sentence-block+.sentence-block{border-top:1px dashed #e1e6e9;border-left:0}.sentence-block{padding:14px 17px 18px}.card-top{padding:12px 17px 9px}.tip{padding:12px 17px 14px}.sentence{font-size:15px}.bonus{padding:17px}.learning-list{grid-template-columns:1fr}.topbar .inner{min-height:56px}.url{font-size:10px;max-width:175px;overflow:hidden;text-overflow:ellipsis}}
+@media print{.topbar,.toolbar,.copy-btn,.toast{display:none!important}.container{max-width:none}.hero{padding:15px 0 20px}.main{padding-top:15px}.review-card{break-inside:avoid;box-shadow:none;margin-bottom:7px}.comparison{grid-template-columns:1fr 1fr}.sentence-block+.sentence-block{border-left:1px solid #e8e8e8;border-top:0}.sentence{font-size:12px}.legend,.tip{font-size:11px}.footer{padding:10px 0}@page{size:A4;margin:12mm}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="container inner"><div class="brand"><span class="brand-icon">Aa</span> ENGLISH HIGHLIGHT NOTES</div><a class="url" href="https://www.reddit.com/r/aigamedev/comments/1xq41gk/" target="_blank" rel="noopener noreferrer">r/aigamedev · 원본 게시글 ↗</a></div></header>
+<section class="hero"><div class="container">
+<p class="eyebrow">REDDIT COMMENT REVIEW · DRY-CLASS-9809</p>
+<h1>영어 댓글, <span class="stroke">형광펜</span>으로<br/>한눈에 비교하기</h1>
+<p class="lead">작성한 문장과 추천 문장을 나란히 놓았어요. <strong>기존 표현에서 바뀐 부분은 취소선</strong>으로, 새로 고친 부분은 <strong>연두색 형광 표시</strong>로 확인할 수 있어요. 오른쪽 추천 표현은 바로 복사할 수 있어요.</p>
+<div class="meta"><strong>댓글 16개</strong><span class="sep"></span>문법 · 표현 · 뉘앙스 · 댓글 톤<span class="sep"></span>2026. 11. 08.</div>
+<div class="legend" aria-label="색상 범례"><span><i class="chip yellow"></i> 노란색 · 내가 쓴 표현</span><span><i class="chip green"></i> 연두색 · 추천 표현</span><span><i class="chip strike"></i> 빨간 취소선 · 바뀐 표현</span><span><i class="chip green"></i> 진한 연두 · 새로 들어간 표현</span></div>
+</div></section>
+<div class="toolbar"><div class="container toolinner"><label class="search-wrap" aria-label="문장 검색"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg><input id="search" placeholder="영어 문장, 설명, 표현 검색" type="search" autocomplete="off" /></label><div class="filters" aria-label="카테고리 필터"><button class="filter-btn active" type="button" data-filter="all">전체 보기</button><button class="filter-btn" type="button" data-filter="grammar">문법</button><button class="filter-btn" type="button" data-filter="expression">표현·어휘</button><button class="filter-btn" type="button" data-filter="natural">자연스러움</button><button class="filter-btn" type="button" data-filter="tone">댓글 톤</button></div><div class="tools-right"><span class="results" id="results">16 / 16개</span><button class="action" type="button" id="toggleHighlights">형광 표시 끄기</button><button class="action" type="button" id="print">인쇄 / PDF</button><button class="action" type="button" id="copyAll">추천문 전체 복사</button></div></div></div>
+<main class="container main"><div class="section-line"><h2>댓글별 상세 교정</h2><span class="small-sub">OLD → RECOMMENDED</span></div><div class="cards" id="cards">
+<article class="review-card" id="item-01" data-category="expression" data-search="i made my mind. i&#x27;ve made up my mind. 결심했다는 표현은 make up one’s mind를 써요. 관용구">
+    <div class="card-top"><div class="top-left"><span class="number">01</span><span class="category">관용구</span></div><span class="level">필수 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">I</del> made my mind.</mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="I&#x27;ve made up my mind." aria-label="1번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">I&#x27;ve</ins> made <ins class="added">up</ins> my mind.</mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>결심했다는 표현은 make up one’s mind를 써요.</span></div>
+  </article>
+<article class="review-card" id="item-02" data-category="expression" data-search="the blue man is the pain point. i just got it. oh, i see now. the blue character is the problem. 그래픽 요소가 어색하다는 맥락에서는 pain point보다 problem / looks out of place가 잘 맞아요. 어휘·뉘앙스">
+    <div class="card-top"><div class="top-left"><span class="number">02</span><span class="category">어휘·뉘앙스</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">the</del> blue <del class="removed">man</del> is the <del class="removed">pain point. I just got it.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Oh, I see now. The blue character is the problem." aria-label="2번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">Oh, I see now. The</ins> blue <ins class="added">character</ins> is the <ins class="added">problem.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>그래픽 요소가 어색하다는 맥락에서는 pain point보다 problem / looks out of place가 잘 맞아요.</span></div>
+  </article>
+<article class="review-card" id="item-03" data-category="grammar" data-search="i guess almost everyone like the first version. i guess almost everyone likes the first version. everyone은 단수 취급하므로 동사는 likes예요. 문법">
+    <div class="card-top"><div class="top-left"><span class="number">03</span><span class="category">문법</span></div><span class="level">필수 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow">I guess almost everyone <del class="removed">like</del> the first version.</mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="I guess almost everyone likes the first version." aria-label="3번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green">I guess almost everyone <ins class="added">likes</ins> the first version.</mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>everyone은 단수 취급하므로 동사는 likes예요.</span></div>
+  </article>
+<article class="review-card" id="item-04" data-category="natural" data-search="i also agree that&#x27;s why designers exist. i agree. that&#x27;s why we have designers! 문장을 나누면 반응이 더 또렷해져요. 두 번째 문장은 가볍고 친근해요. 자연스러움">
+    <div class="card-top"><div class="top-left"><span class="number">04</span><span class="category">자연스러움</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow">I <del class="removed">also agree that&#x27;s</del> why <del class="removed">designers exist.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="I agree. That&#x27;s why we have designers!" aria-label="4번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green">I <ins class="added">agree. That&#x27;s</ins> why <ins class="added">we have designers!</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>문장을 나누면 반응이 더 또렷해져요. 두 번째 문장은 가볍고 친근해요.</span></div>
+  </article>
+<article class="review-card" id="item-05" data-category="grammar" data-search="that sounds like good idea. but i used cel shaded outlines a lot in other games. so i tried a different style. that sounds like a good idea! i&#x27;ve used cel-shaded outlines in my other games, though, so i wanted to try something different. a good idea처럼 관사를 넣고, cel-shaded는 하이픈을 써요. 문장 연결도 다듬었어요. 문법">
+    <div class="card-top"><div class="top-left"><span class="number">05</span><span class="category">문법</span></div><span class="level">필수 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow">That sounds like good <del class="removed">idea. but I</del> used <del class="removed">cel shaded</del> outlines <del class="removed">a lot</del> in other <del class="removed">games.</del> so I <del class="removed">tried a different style.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="That sounds like a good idea! I&#x27;ve used cel-shaded outlines in my other games, though, so I wanted to try something different." aria-label="5번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green">That sounds like <ins class="added">a</ins> good <ins class="added">idea! I&#x27;ve</ins> used <ins class="added">cel-shaded</ins> outlines in <ins class="added">my</ins> other <ins class="added">games, though,</ins> so I <ins class="added">wanted to try something different.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>a good idea처럼 관사를 넣고, cel-shaded는 하이픈을 써요. 문장 연결도 다듬었어요.</span></div>
+  </article>
+<article class="review-card" id="item-06" data-category="natural" data-search="looks like a nice idea. i will try it. that sounds like a great idea. i&#x27;ll give it a try! 원문도 이해돼요. 제안을 받아들이는 댓글에서는 i’ll give it a try가 특히 자연스러워요. 자연스러움">
+    <div class="card-top"><div class="top-left"><span class="number">06</span><span class="category">자연스러움</span></div><span class="level">선택 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">Looks</del> like a <del class="removed">nice</del> idea. <del class="removed">I will try it.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="That sounds like a great idea. I&#x27;ll give it a try!" aria-label="6번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">That sounds</ins> like a <ins class="added">great</ins> idea. <ins class="added">I&#x27;ll give it a try!</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>원문도 이해돼요. 제안을 받아들이는 댓글에서는 I’ll give it a try가 특히 자연스러워요.</span></div>
+  </article>
+<article class="review-card" id="item-07" data-category="expression" data-search="that&#x27;s because i tried to convert the first version into the 2nd one. i guess it failed. i tried turning the first version into the second one, but i guess it didn&#x27;t quite work out. failed보다 didn’t quite work out가 디자인 실험을 설명할 때 조금 더 부드러워요. 어휘·뉘앙스">
+    <div class="card-top"><div class="top-left"><span class="number">07</span><span class="category">어휘·뉘앙스</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">That&#x27;s because</del> I tried <del class="removed">to convert</del> the first version into the <del class="removed">2nd one.</del> I guess it <del class="removed">failed.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="I tried turning the first version into the second one, but I guess it didn&#x27;t quite work out." aria-label="7번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green">I tried <ins class="added">turning</ins> the first version into the <ins class="added">second one, but</ins> I guess it <ins class="added">didn&#x27;t quite work out.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>failed보다 didn’t quite work out가 디자인 실험을 설명할 때 조금 더 부드러워요.</span></div>
+  </article>
+<article class="review-card" id="item-08" data-category="grammar" data-search="that&#x27;s right. i might use color for only specific point. exactly. i might use color only to highlight certain elements. specific point는 맥락상 부자연스러워서 certain elements로 구체화했어요. 문법">
+    <div class="card-top"><div class="top-left"><span class="number">08</span><span class="category">문법</span></div><span class="level">필수 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">That&#x27;s right.</del> I might use color <del class="removed">for</del> only <del class="removed">specific point.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Exactly. I might use color only to highlight certain elements." aria-label="8번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">Exactly.</ins> I might use color only <ins class="added">to highlight certain elements.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>specific point는 맥락상 부자연스러워서 certain elements로 구체화했어요.</span></div>
+  </article>
+<article class="review-card" id="item-09" data-category="natural" data-search="great advice. i will consider that too. great advice! i&#x27;ll keep that in mind. i’ll keep that in mind는 “참고할게”에 가까운 익숙한 표현이에요. 자연스러움">
+    <div class="card-top"><div class="top-left"><span class="number">09</span><span class="category">자연스러움</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">great advice. I will consider</del> that <del class="removed">too.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Great advice! I&#x27;ll keep that in mind." aria-label="9번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">Great advice! I&#x27;ll keep</ins> that <ins class="added">in mind.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>I’ll keep that in mind는 “참고할게”에 가까운 익숙한 표현이에요.</span></div>
+  </article>
+<article class="review-card" id="item-10" data-category="tone" data-search="looks nicer. that looks much better! thanks for the quick edit. 직접 이미지를 수정해준 사람이라면 감사를 덧붙일 때 훨씬 따뜻하게 들려요. 댓글 매너">
+    <div class="card-top"><div class="top-left"><span class="number">10</span><span class="category">댓글 매너</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow">looks <del class="removed">nicer.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="That looks much better! Thanks for the quick edit." aria-label="10번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">That</ins> looks <ins class="added">much better! Thanks for the quick edit.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>직접 이미지를 수정해준 사람이라면 감사를 덧붙일 때 훨씬 따뜻하게 들려요.</span></div>
+  </article>
+<article class="review-card" id="item-11" data-category="expression" data-search="my friends told me the same thing. i guess i need to find better concept. my friends said the same thing. i guess i need to rethink the visual direction. 디자인 방향을 다시 잡는다면 rethink the visual direction이 의미가 명확해요. 어휘·뉘앙스">
+    <div class="card-top"><div class="top-left"><span class="number">11</span><span class="category">어휘·뉘앙스</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">my</del> friends <del class="removed">told me</del> the same thing. I guess I need to <del class="removed">find better concept.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="My friends said the same thing. I guess I need to rethink the visual direction." aria-label="11번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">My</ins> friends <ins class="added">said</ins> the same thing. I guess I need to <ins class="added">rethink the visual direction.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>디자인 방향을 다시 잡는다면 rethink the visual direction이 의미가 명확해요.</span></div>
+  </article>
+<article class="review-card" id="item-12" data-category="natural" data-search="my first choice is black &amp; grey, but some of my friends do not like black &amp; grey, so i made the second version. i personally prefer the black-and-gray version, but some friends weren&#x27;t fans, so i tried a color version. black &amp; grey 반복을 줄였고, 선호·시도라는 관계를 더 자연스럽게 표현했어요. 자연스러움">
+    <div class="card-top"><div class="top-left"><span class="number">12</span><span class="category">자연스러움</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">my first choice is black &amp; grey,</del> but some <del class="removed">of my</del> friends <del class="removed">do not like black &amp; grey,</del> so I <del class="removed">made the second</del> version.</mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="I personally prefer the black-and-gray version, but some friends weren&#x27;t fans, so I tried a color version." aria-label="12번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">I personally prefer the black-and-gray version,</ins> but some friends <ins class="added">weren&#x27;t fans,</ins> so I <ins class="added">tried a color</ins> version.</mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>black &amp; grey 반복을 줄였고, 선호·시도라는 관계를 더 자연스럽게 표현했어요.</span></div>
+  </article>
+<article class="review-card" id="item-13" data-category="natural" data-search="thanks! i might choose black &amp; gray. thanks! i&#x27;m leaning toward the black-and-gray version. 어느 쪽으로 마음이 기우는지 설명할 때 be leaning toward가 좋아요. 자연스러움">
+    <div class="card-top"><div class="top-left"><span class="number">13</span><span class="category">자연스러움</span></div><span class="level">선택 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow">Thanks! <del class="removed">I might choose black &amp; gray.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Thanks! I&#x27;m leaning toward the black-and-gray version." aria-label="13번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green">Thanks! <ins class="added">I&#x27;m leaning toward the black-and-gray version.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>어느 쪽으로 마음이 기우는지 설명할 때 be leaning toward가 좋아요.</span></div>
+  </article>
+<article class="review-card" id="item-14" data-category="expression" data-search="i see. i will ask later after updating color theme. got it. i&#x27;ll tweak the color palette and ask for feedback again later. color palette는 디자인 맥락에서 익숙한 표현이고, ask for feedback으로 대상이 명확해져요. 어휘·뉘앙스">
+    <div class="card-top"><div class="top-left"><span class="number">14</span><span class="category">어휘·뉘앙스</span></div><span class="level">표현 개선</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">I see. I will</del> ask <del class="removed">later after updating color theme.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Got it. I&#x27;ll tweak the color palette and ask for feedback again later." aria-label="14번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">Got it. I&#x27;ll tweak the color palette and</ins> ask <ins class="added">for feedback again later.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>color palette는 디자인 맥락에서 익숙한 표현이고, ask for feedback으로 대상이 명확해져요.</span></div>
+  </article>
+<article class="review-card" id="item-15" data-category="grammar" data-search="some of my friends do not like black &amp; gray, so i added color version. some of my friends weren&#x27;t into the black-and-gray look, so i made a color version too. a color version처럼 관사가 필요해요. weren’t into는 캐주얼한 구어체예요. 문법">
+    <div class="card-top"><div class="top-left"><span class="number">15</span><span class="category">문법</span></div><span class="level">필수 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">some</del> of my friends <del class="removed">do not like black &amp; gray,</del> so I <del class="removed">added</del> color <del class="removed">version.</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Some of my friends weren&#x27;t into the black-and-gray look, so I made a color version too." aria-label="15번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">Some</ins> of my friends <ins class="added">weren&#x27;t into the black-and-gray look,</ins> so I <ins class="added">made a</ins> color <ins class="added">version too.</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>a color version처럼 관사가 필요해요. weren’t into는 캐주얼한 구어체예요.</span></div>
+  </article>
+<article class="review-card" id="item-16" data-category="tone" data-search="thanks for your help! thanks for the feedback! 원문도 자연스럽고 올바른 영어예요. 피드백에 대한 답글이라면 feedback이라고 명시해도 좋아요. 댓글 매너">
+    <div class="card-top"><div class="top-left"><span class="number">16</span><span class="category">댓글 매너</span></div><span class="level">선택 수정</span></div>
+    <div class="comparison">
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 내가 쓴 표현</div><p class="sentence original"><mark class="fluoro-yellow">Thanks for <del class="removed">your help!</del></mark></p></section>
+      <section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 표현 <button class="copy-btn" type="button" data-copy="Thanks for the feedback!" aria-label="16번 추천 표현 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green">Thanks for <ins class="added">the feedback!</ins></mark></p></section>
+    </div>
+    <div class="tip"><span class="tip-symbol">✦</span><span>원문도 자연스럽고 올바른 영어예요. 피드백에 대한 답글이라면 feedback이라고 명시해도 좋아요.</span></div>
+  </article>
+</div><div class="empty" id="empty">해당 조건의 문장을 찾지 못했어요. 다른 검색어를 시도해보세요.</div>
+<section class="bonus" aria-labelledby="bonus-title"><div class="bonus-label">BONUS · POST TITLE</div><h2 id="bonus-title">게시글 제목도 다듬기</h2><div class="comparison"><section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-yellow"></span> 원래 제목</div><p class="sentence original"><mark class="fluoro-yellow"><del class="removed">Help me to choose design theme</del></mark></p></section><section class="sentence-block"><div class="sentence-head"><span class="mini-dot dot-green"></span> 추천 제목 <button class="copy-btn" type="button" data-copy="Which art style works better for my Soulslike game?" aria-label="추천 게시글 제목 복사"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg> 복사</button></div><p class="sentence suggestion"><mark class="fluoro-green"><ins class="added">Which art style works better for my Soulslike game?</ins></mark></p></section></div><p class="caption">디자인의 시각적 스타일을 비교하는 글이므로 design theme보다 art style이 자연스러워요.</p></section>
+<section class="learning"><h2>짧게 기억할 표현 4개</h2><div class="learning-list"><div class="learning-item"><strong><code>I've made up my mind.</code></strong>결심했어 · make up one's mind</div><div class="learning-item"><strong><code>I'll keep that in mind.</code></strong>좋은 의견이야, 참고할게</div><div class="learning-item"><strong><code>I'm leaning toward …</code></strong>… 쪽으로 마음이 기울고 있어</div><div class="learning-item"><strong><code>That looks a bit off.</code></strong>뭔가 살짝 어색해 보여</div></div></section></main>
+<footer class="footer"><div class="container">Reddit 영어 댓글 교정 노트 · 원문의 의미는 유지하되 상황에 맞게 자연스럽게 다듬은 제안입니다. · 이 HTML 파일은 인터넷 연결 없이도 열 수 있어요.</div></footer><div class="toast" id="toast" role="status" aria-live="polite">복사했어요!</div>
+<script>
+(function(){
+const cards=Array.from(document.querySelectorAll('.review-card'));
+const search=document.querySelector('#search');const results=document.querySelector('#results');const empty=document.querySelector('#empty');
+let category='all';
+function refresh(){const q=search.value.toLocaleLowerCase().trim();let n=0;for(const el of cards){const ok=(category==='all'||el.dataset.category===category)&&(!q||el.dataset.search.includes(q));el.hidden=!ok;if(ok)n++;}results.textContent=n+' / '+cards.length+'개';empty.style.display=n?'none':'block';}
+search.addEventListener('input',refresh);
+document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{category=btn.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b===btn));refresh();}));
+const toggle=document.querySelector('#toggleHighlights');toggle.addEventListener('click',()=>{const hidden=document.body.classList.toggle('hide-highlights');toggle.textContent=hidden?'형광 표시 켜기':'형광 표시 끄기';});
+const toast=document.querySelector('#toast');let toastTimer;
+function notify(message){toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1900);}
+async function copyText(value){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);}else{const input=document.createElement('textarea');input.value=value;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();const ok=document.execCommand('copy');input.remove();if(!ok)throw new Error('clipboard unavailable');}notify('추천 표현을 복사했어요.');}catch(e){notify('복사할 수 없어요. 텍스트를 직접 선택해주세요.');}}
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',()=>copyText(btn.dataset.copy)));
+document.querySelector('#copyAll').addEventListener('click',()=>copyText("1. I've made up my mind.\n2. Oh, I see now. The blue character is the problem.\n3. I guess almost everyone likes the first version.\n4. I agree. That's why we have designers!\n5. That sounds like a good idea! I've used cel-shaded outlines in my other games, though, so I wanted to try something different.\n6. That sounds like a great idea. I'll give it a try!\n7. I tried turning the first version into the second one, but I guess it didn't quite work out.\n8. Exactly. I might use color only to highlight certain elements.\n9. Great advice! I'll keep that in mind.\n10. That looks much better! Thanks for the quick edit.\n11. My friends said the same thing. I guess I need to rethink the visual direction.\n12. I personally prefer the black-and-gray version, but some friends weren't fans, so I tried a color version.\n13. Thanks! I'm leaning toward the black-and-gray version.\n14. Got it. I'll tweak the color palette and ask for feedback again later.\n15. Some of my friends weren't into the black-and-gray look, so I made a color version too.\n16. Thanks for the feedback!"));
+document.querySelector('#print').addEventListener('click',()=>window.print());
+})();
+</script>
+</body>
+</html>
