@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="직감에서 확률로. 증거를 더하고, 판단을 업데이트하는 인터랙티브 베이지안 센서.">
+  <title>Bayes Lens — 베이지안 센서</title>
+  <style>
+    :root {
+      --page:#f8f9fc;--white:#fff;--ink:#1b2438;--text:#3c465c;--muted:#8590a3;--line:#e8ecf3;
+      --blue:#486ad6;--blue-pale:#eef2ff;--green:#278b74;--green-pale:#eaf7f2;
+      --orange:#ca7d54;--orange-pale:#fff3ed;--shadow:0 12px 34px rgba(20,38,70,.055);
+      --radius:20px;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}body{margin:0;background:var(--page);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #bdcbfa;outline-offset:3px}
+    .shell{max-width:1230px;padding:0 30px;margin:0 auto}
+    .topbar{border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);position:sticky;z-index:10;top:0;backdrop-filter:blur(14px)}
+    .top-inner{height:68px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+    .brandmark{width:32px;height:32px;border-radius:11px;background:#eef1ff;display:grid;place-items:center;color:var(--blue);font-size:21px;font-family:Georgia,serif;font-weight:bold;position:relative}
+    .brandmark:after{content:'';height:5px;width:5px;right:7px;top:7px;background:#4b91a5;position:absolute;border-radius:50%}
+    .brand-t{font-weight:820;letter-spacing:-.55px;font-size:16px}.brand-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-left:10px}
+    .top-actions{display:flex;gap:8px}.btn{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:10px;padding:8px 13px;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:7px;justify-content:center;transition:transform .12s,background .12s,border .12s}
+    .btn:hover{background:#f8faff;transform:translateY(-1px)}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 4px 10px rgba(72,106,214,.15)}.btn.primary:hover{background:#3a5fc7}
+    .hero{padding:54px 0 35px;display:flex;gap:24px;justify-content:space-between;align-items:flex-end}
+    .eyebrow{font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:9px}.eyebrow::before{content:'';width:18px;height:2px;background:var(--blue);border-radius:3px}
+    h1{margin:14px 0 13px;font-size:clamp(30px,4vw,45px);letter-spacing:-2.15px;font-weight:820;line-height:1.24}
+    .hero p{font-size:14px;color:#68748b;margin:0;max-width:610px}.hero-aside{border-radius:16px;background:#fff;border:1px solid var(--line);padding:13px 17px;min-width:198px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+    .hero-aside .status-ring{height:9px;width:9px;border-radius:50%;background:#58a793;box-shadow:0 0 0 5px #e9f6f1}.hero-aside strong{display:block;font-size:12px}.hero-aside span{display:block;font-size:11px;color:var(--muted)}
+    .app-grid{display:grid;grid-template-columns:minmax(0,1.63fr) minmax(320px,1fr);gap:20px;align-items:start;padding-bottom:32px}.left-col,.right-col{display:flex;flex-direction:column;gap:19px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.inner{padding:27px 28px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+    .section-id{font-size:10px;color:#93a0b5;letter-spacing:1.3px;font-weight:800}.panel-title{font-size:16px;font-weight:810;letter-spacing:-.45px;margin:3px 0 0}
+    .scenario-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px}
+    .scenario{border-radius:10px;padding:10px 14px;font-size:12px;color:#6b7790;background:#f8f9fc;border:1px solid transparent;font-weight:730;display:inline-flex;align-items:center;gap:7px}
+    .scenario.active{border-color:#d8e0fa;background:#eef2ff;color:#365dbe}.scenario:hover{border-color:#dae0ec}.scenario svg{flex-shrink:0}
+    .field-label{display:block;font-weight:760;font-size:11px;color:#5b667a;margin-bottom:9px}.hyp-input{border:1px solid #e0e5ef;border-radius:11px;padding:13px 15px;font-weight:760;font-size:15px;color:var(--ink);width:100%;background:#fff;letter-spacing:-.3px}
+    .hyp-input:focus{outline:3px solid #edf2ff;border-color:#9baef0}.hint{margin:10px 0 0;color:#8e98a9;font-size:11px}
+    .prior-area{border-top:1px solid var(--line);margin-top:25px;padding-top:22px}.slider-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.slider-caption{color:var(--muted);font-size:11px;font-weight:600}
+    .metric{font-size:25px;font-weight:850;letter-spacing:-1.1px;color:var(--blue);font-variant-numeric:tabular-nums}
+    input[type=range]{width:100%;height:6px;appearance:none;-webkit-appearance:none;background:linear-gradient(to right,var(--blue) 0%,var(--blue) var(--range-fill,50%),#e8edf5 var(--range-fill,50%),#e8edf5 100%);border-radius:20px;outline:0;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:16px;background:#fff;border:4px solid var(--blue);box-shadow:0 2px 6px #486ad633;border-radius:50%}
+    input[type=range]::-moz-range-thumb{width:10px;height:10px;background:#fff;border:4px solid var(--blue);box-shadow:0 2px 6px #486ad633;border-radius:50%}
+    .range-labels{display:flex;justify-content:space-between;font-size:10px;color:#9aa4b4;margin-top:8px}
+    .evidence-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.evidence-intro p{margin:5px 0 0;color:var(--muted);font-size:12px}.n-ticker{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:#eef2ff;color:var(--blue);min-width:24px;padding:1px 7px;font-size:11px;font-weight:800}
+    .evidence-list{display:flex;flex-direction:column;gap:10px;margin:19px 0 16px}.evidence{border:1px solid var(--line);border-radius:13px;transition:border-color .15s,background .15s;background:#fff}.evidence.enabled{border-color:#d9e2f8}.evidence-main{padding:16px;display:flex;gap:12px;align-items:flex-start}
+    .check{position:relative;display:inline-flex;flex-shrink:0;margin-top:3px}.check input{height:19px;width:19px;accent-color:var(--blue);cursor:pointer}
+    .ev-text{flex:1;min-width:0}.ev-title{font-size:12px;line-height:1.63;font-weight:720;color:#344158;display:block}.ev-text p{margin:5px 0 0;font-size:10px;color:#9ca7b8;line-height:1.4}.tag{font-size:10px;color:#8b96a8;font-weight:650;background:#f6f8fb;padding:3px 8px;border-radius:6px;white-space:nowrap;display:inline-block}
+    .ev-controls{display:flex;align-items:flex-end;flex-direction:column;gap:8px;padding-left:4px}.impact{white-space:nowrap;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}.impact.pos{color:var(--green)}.impact.neg{color:var(--orange)}.impact.neutral{color:#8792a6}
+    .tiny-btn{padding:3px 7px;background:none;border:0;color:#929db0;font-size:11px;font-weight:680}.tiny-btn:hover{text-decoration:underline;color:var(--blue)}
+    .evidence:not(.enabled){opacity:.62}.evidence:not(.enabled):hover{opacity:1}.evidence-detail{padding:0 16px 16px 47px;border-top:1px dashed #ecf0f6;background:linear-gradient(#fff,#fdfdff)}
+    .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding-top:13px}.edit-l{font-size:11px;color:#707e91;display:flex;justify-content:space-between;margin-bottom:10px}.edit-l b{color:var(--ink);font-variant-numeric:tabular-nums}.edit-sub{color:#9ca7ba;font-size:10px;margin-top:7px}
+    .add-bar{display:flex;justify-content:space-between;gap:12px;align-items:center}.helper{font-size:10px;color:var(--muted)}
+    .adder{display:none;background:#f9faff;border:1px solid #e5eaf8;padding:16px;border-radius:12px;margin-top:16px}.adder.visible{display:block}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .form-row.full{grid-column:1/-1}.form-row label{display:block;font-weight:720;font-size:10px;color:#6d7890;margin-bottom:6px}.form-row input,.form-row select{width:100%;background:#fff;border:1px solid #e0e6f0;border-radius:8px;min-height:36px;padding:8px 10px;color:var(--ink);font-size:12px}
+    .form-help{font-size:10px;color:#8893a6;margin-top:9px}.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+    .adjust-box{background:#fff;border:1px solid var(--line);padding:19px 22px;border-radius:var(--radius);box-shadow:var(--shadow)}.adjust-box p{font-size:11px;color:var(--muted);margin:6px 0 13px}.adjust-grid{display:grid;grid-template-columns:1fr 60px;align-items:center;gap:12px}.correction-val{font-weight:820;color:var(--ink);font-size:15px;text-align:right;font-variant-numeric:tabular-nums}
+    .summary-card{padding:27px 26px 23px}.outcome-head{display:flex;align-items:center;justify-content:space-between}.outcome-head h2{font-size:12px;color:#7b88a0;letter-spacing:.25px;margin:0;font-weight:800}.live-dot{width:7px;height:7px;background:#6daea2;border-radius:50%;box-shadow:0 0 0 4px #eaf7f1;display:inline-block;margin-right:7px}
+    .gauge{width:220px;height:220px;position:relative;margin:21px auto 15px;display:grid;place-items:center}.gauge svg{height:100%;width:100%;transform:rotate(-90deg);overflow:visible}.gauge .track{stroke:#edf0f6;stroke-width:12;fill:none}.gauge .arc{stroke:var(--blue);stroke-width:12;fill:none;stroke-linecap:round;transition:stroke-dashoffset .4s,stroke .3s}.gauge-center{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px}
+    .gauge-value{font-size:58px;line-height:1;font-weight:850;letter-spacing:-3px;font-variant-numeric:tabular-nums}.gauge-percent{font-size:25px;letter-spacing:0;font-weight:700;color:#8792a7}.gauge-caption{color:#9da7b8;font-size:11px;margin-top:8px;font-weight:680}
+    .judgement{text-align:center;font-size:13px;color:#5f6b80;margin:0 auto 21px;max-width:250px}.judgement strong{color:var(--ink);font-weight:800}
+    .compare{background:#f7f9fd;border:1px solid #f0f2f8;padding:16px 15px;border-radius:12px}.comp-head{display:flex;justify-content:space-between;margin-bottom:12px;color:#8390a4;font-size:11px}.comp-head b{color:var(--ink);font-variant-numeric:tabular-nums}.compare-track{height:10px;border-radius:999px;background:#e6ebf4;position:relative;overflow:hidden}.compare-fill{height:100%;background:#aebcf0;width:50%;transition:width .3s;border-radius:inherit}.compare-dot{height:18px;width:4px;border-radius:2px;background:var(--ink);position:absolute;top:-4px;left:50%;z-index:2;transition:left .3s}.compare-legend{display:flex;justify-content:space-between;gap:12px;margin-top:11px;font-size:10px;color:#8a96a8}.compare-legend span{display:flex;align-items:center;gap:5px}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#aebcf0}.dot.prior{background:#263653}
+    .change{text-align:center;margin-top:14px;color:#607188;font-size:11px;font-weight:680}.change b{color:var(--blue);font-size:12px}
+    .timeline-card{padding:23px 24px}.timeline-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.timeline-head h2{font-size:14px;letter-spacing:-.35px;margin:0}.timeline-head span{font-size:10px;color:#9ba6b5}
+    .chart{width:100%;height:158px;display:block;overflow:visible}.steps{display:flex;gap:8px;align-items:start;overflow:auto;padding-bottom:3px;margin-top:5px}.step-item{display:flex;align-items:center;gap:6px;font-size:10px;color:#7d899f;white-space:nowrap;font-variant-numeric:tabular-nums}.step-item strong{color:#35435b;font-size:10px}
+    .insight-card{padding:23px 24px}.insight-card h2{font-size:14px;margin:0 0 14px;letter-spacing:-.3px}.insight{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}.insight:last-child{margin-bottom:0}.insight-symbol{flex-shrink:0;height:28px;width:28px;display:grid;place-items:center;border-radius:9px;font-weight:900;font-size:15px}.insight-symbol.up{background:var(--green-pale);color:var(--green)}.insight-symbol.down{background:var(--orange-pale);color:var(--orange)}.insight-symbol.info{background:var(--blue-pale);color:var(--blue)}
+    .insight-body{font-size:11px;color:#6d788f;min-width:0}.insight-body b{display:block;color:#354158;margin-bottom:1px;font-size:11px}.insight-body p{margin:0;line-height:1.55}
+    .explain{border:1px solid var(--line);background:#fff;border-radius:var(--radius);padding:25px 27px;margin:1px 0 40px}.explain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:14px}.expl-item{border-left:2px solid #e1e7f5;padding-left:15px}.expl-num{font-size:10px;color:var(--blue);font-weight:850;letter-spacing:1.2px}.expl-item b{display:block;margin:5px 0;font-size:12px}.expl-item p{font-size:11px;color:#7b889e;margin:0}.formula{margin-top:21px;padding:16px 18px;background:#f8faff;border-radius:11px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;color:#4d5f83;font-size:12px;font-weight:700}
+    .formula strong{color:var(--blue)}.footnote{padding:6px 0 33px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);font-size:11px;color:#9da7b6}
+    .hide{display:none!important}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:960px){.app-grid{grid-template-columns:1fr}.right-col{display:grid;grid-template-columns:1fr 1fr;align-items:start}.summary-card{grid-row:span 2}.hero-aside{display:none}.gauge{width:194px;height:194px}.gauge-value{font-size:52px}}
+    @media(max-width:660px){.shell{padding:0 16px}.top-inner{height:60px}.brand-sub,.top-actions .desktop-only{display:none}.hero{padding:34px 0 22px}.hero h1{font-size:30px;letter-spacing:-1.45px}.hero p{font-size:12px}.app-grid{gap:13px}.left-col,.right-col{gap:13px}.right-col{display:flex}.inner,.summary-card{padding:22px 18px}.timeline-card,.insight-card{padding:21px 18px}.scenario{font-size:11px;padding:9px 12px}.evidence-main{gap:8px;padding:13px 12px}.ev-title{font-size:11px}.evidence-detail{padding:0 13px 15px}.ev-controls{gap:4px}.edit-grid{gap:12px}.add-bar{align-items:flex-start;flex-direction:column}.explain{padding:21px 19px}.explain-grid{grid-template-columns:1fr;gap:16px}.footnote{align-items:flex-start;flex-direction:column}.formula{font-size:11px}.form-grid{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell top-inner">
+    <a class="brand" href="#top" aria-label="Bayes Lens 첫 화면"><span class="brandmark">β</span><span class="brand-t">Bayes Lens</span><span class="brand-sub">THINK CLEARER</span></a>
+    <div class="top-actions"><button type="button" class="btn desktop-only" id="resetBtn" title="현재 시나리오를 기본값으로 되돌립니다">↺ 초기화</button><button type="button" class="btn primary" id="exportBtn">↓ 판단 기록 저장</button></div>
+  </div></header>
+  <main class="shell" id="top">
+    <section class="hero">
+      <div><div class="eyebrow">Interactive thinking tool</div><h1>직감은 신호를 포착하고,<br>베이즈는 확신을 보정한다.</h1><p>사전확률을 정하고, 증거를 선택하고, 해석을 수정해 보세요. '이 사람이 어떤 사람인가'보다 '지금 가진 정보로 얼마나 믿을 수 있는가'를 묻는 도구입니다.</p></div>
+      <div class="hero-aside"><span class="status-ring" aria-hidden="true"></span><div><strong>로컬 시뮬레이터</strong><span>서버 전송 없음 · 즉시 업데이트</span></div></div>
+    </section>
+    <div class="app-grid">
+      <div class="left-col">
+        <section class="panel inner" aria-label="판단 가설 선택">
+          <div class="panel-head"><div><span class="section-id">01 / DEFINE</span><h2 class="panel-title">무엇을 판단할까?</h2></div><span class="tag">시나리오 선택</span></div>
+          <div class="scenario-tabs" id="scenarios" role="group" aria-label="시나리오"></div>
+          <label class="field-label" for="hypothesis">검증하고 싶은 가설 (H)</label>
+          <input id="hypothesis" class="hyp-input" type="text" maxlength="140" aria-label="검증할 가설">
+          <p class="hint">좋은 가설은 참/거짓을 구분할 수 있는 구체적인 문장입니다. 가설을 바꾸면 증거의 가정값도 다시 확인하세요.</p>
+          <div class="prior-area">
+            <div class="slider-head"><div><label class="field-label" for="priorRange" style="margin-bottom:3px">사전확률 P(H)</label><span class="slider-caption">증거를 보기 전 나의 초기 판단</span></div><span class="metric" id="priorLabel">50%</span></div>
+            <input id="priorRange" type="range" min="1" max="99" step="1" value="50" aria-label="사전확률">
+            <div class="range-labels"><span>1% · 매우 회의적</span><span>50% · 중립</span><span>99% · 매우 확신</span></div>
+          </div>
+        </section>
+        <section class="panel inner" aria-label="증거 목록">
+          <div class="evidence-intro"><div><span class="section-id">02 / OBSERVE</span><h2 class="panel-title">관찰된 증거 <span class="n-ticker" id="activeCount">0</span></h2><p>실제로 관찰한 항목만 체크하세요. 수치를 누르면 가정값을 바꿀 수 있어요.</p></div><span class="tag">증거의 질이 중요</span></div>
+          <div class="evidence-list" id="evidenceList"></div>
+          <div class="add-bar"><button type="button" class="btn" id="toggleAdd">＋ 나만의 증거 추가</button><span class="helper">가상 예시 수치 · 편집 가능</span></div>
+          <form class="adder" id="addForm" autocomplete="off">
+            <div class="form-grid">
+              <div class="form-row full"><label for="newTitle">증거 내용</label><input id="newTitle" type="text" placeholder="예: 다음 만남에서 약속한 행동을 실제로 실천함" maxlength="160" required></div>
+              <div class="form-row"><label for="newGroup">관련 증거 그룹</label><select id="newGroup"><option value="실행">실행</option><option value="대화">대화</option><option value="약속">약속</option><option value="환경">환경</option><option value="사용자 설정">사용자 설정</option><option value="독립">독립 신호</option></select></div>
+              <div class="form-row"><label for="newHint">메모 (선택)</label><input id="newHint" type="text" maxlength="120" placeholder="해석할 때의 주의점"></div>
+              <div class="form-row"><label for="newPH">P(이 증거 | 가설 참) %</label><input id="newPH" type="number" min="1" max="99" value="75" required></div>
+              <div class="form-row"><label for="newPN">P(이 증거 | 가설 거짓) %</label><input id="newPN" type="number" min="1" max="99" value="30" required></div>
+            </div><p class="form-help">두 확률은 실제 측정값이 아니라 직접 설정한 가정입니다. 증거 자체가 참일 확률과는 달라요.</p><div class="form-actions"><button class="btn" type="button" id="cancelAdd">취소</button><button class="btn primary" type="submit">증거 추가</button></div>
+          </form>
+        </section>
+        <section class="adjust-box" aria-label="증거 중복 보정">
+          <div class="slider-head" style="margin-bottom:3px"><div><span class="section-id">03 / CALIBRATE</span><h2 class="panel-title">겹치는 신호는 덜 세게</h2></div><span class="tag">선택 보정</span></div>
+          <p>같은 대화에서 나온 여러 증거는 독립적이지 않을 수 있어요. 그룹 내 두 번째 신호부터 기여도를 할인합니다.</p>
+          <div class="adjust-grid"><input type="range" min="0" max="100" value="65" id="correlation" aria-label="증거 중복 보정 강도"><span class="correction-val" id="corrLabel">65%</span></div>
+          <div class="range-labels"><span>0% · 모두 독립 가정</span><span>100% · 강한 중복 할인</span></div>
+        </section>
+      </div>
+      <aside class="right-col" aria-label="판단 결과">
+        <section class="panel summary-card">
+          <div class="outcome-head"><h2><span class="live-dot"></span>현재 업데이트된 판단</h2><span class="tag" id="scenarioLabel">예시 모델</span></div>
+          <div class="gauge" role="img" id="gauge" aria-label="사후확률"><svg viewBox="0 0 220 220" aria-hidden="true"><circle class="track" cx="110" cy="110" r="95"></circle><circle id="arc" class="arc" cx="110" cy="110" r="95" stroke-dasharray="596.9026" stroke-dashoffset="298.4513"></circle></svg><div class="gauge-center"><div class="gauge-value"><span id="posteriorLabel">50</span><span class="gauge-percent">%</span></div><span class="gauge-caption">사후확률 P(H | E)</span></div></div>
+          <p class="judgement" id="judgement">증거를 선택하면 판단이 업데이트돼요.</p>
+          <div class="compare"><div class="comp-head"><span>확률이 얼마나 달라졌을까?</span><b id="compareValue">50% → 50%</b></div><div class="compare-track"><div id="compareFill" class="compare-fill"></div><span id="compareDot" class="compare-dot"></span></div><div class="compare-legend"><span><i class="dot prior"></i>검은 선: 시작</span><span><i class="dot"></i>색상 바: 현재</span></div></div>
+          <div class="change" id="deltaText">초기 판단과 동일합니다</div>
+        </section>
+        <section class="panel timeline-card"><div class="timeline-head"><h2>믿음의 업데이트 경로</h2><span>증거를 하나씩 반영</span></div><svg id="timeline" class="chart" role="img" aria-label="증거에 따른 사후확률 변화 그래프" viewBox="0 0 340 160"></svg><div class="steps" id="steps"></div></section>
+        <section class="panel insight-card"><h2>베이지안 센서의 메모</h2><div id="insights" aria-live="polite"></div></section>
+      </aside>
+    </div>
+    <section class="explain"><span class="section-id">THE METHOD</span><h2 class="panel-title">숫자는 결론이 아니라, 생각을 정돈하는 장치</h2>
+      <div class="explain-grid"><div class="expl-item"><span class="expl-num">01 / PRIOR</span><b>가설을 명확히</b><p>무엇이 참일지 정하고 출발 확률을 적습니다. 출발점이 편향됐을 가능성도 인정합니다.</p></div>
+      <div class="expl-item"><span class="expl-num">02 / LIKELIHOOD</span><b>증거의 강도를 비교</b><p>가설이 참일 때와 거짓일 때, 같은 증거가 얼마나 자주 나타날지 비교합니다.</p></div>
+      <div class="expl-item"><span class="expl-num">03 / UPDATE</span><b>확신을 조금씩 수정</b><p>우도비를 곱해 판단을 업데이트하되, 같은 원인에서 나온 중복 신호는 조심합니다.</p></div></div>
+      <div class="formula"><span>사후 오즈</span><strong>=</strong><span>사전 오즈</span><strong>×</strong><span>증거의 우도비</span><span style="color:#a1abc0;font-size:10px">LR = P(E|H) / P(E|¬H)</span></div>
+      <p class="hint">주의: 이 도구의 모든 기본 확률은 학습용 가상 숫자이며, 특정 사람·사업·기사의 실제 확률을 측정하지 않습니다. 동일 그룹 증거 보정은 간편한 휴리스틱이고 정식 조건부 의존성 모델은 아닙니다. 중요한 판단은 원자료·반증 가능성·외부 기준으로 확인하세요.</p>
+    </section>
+    <footer class="footnote"><span>Bayes Lens · A small laboratory for better judgement</span><span>모든 데이터는 현재 브라우저에만 저장됩니다 · 외부 전송 없음</span></footer>
+  </main>
+  <script>
+  (() => {
+    'use strict';
+    const STORAGE='bayes-lens-v1';
+    const initial = {
+      current:'people', correlation:65,
+      cases:{
+        people:{name:'사람 · 협업',icon:'◎',prior:50,hypothesis:'이 협업 상대는 자신이 한 약속을 꾸준히 이행할 것이다',evidence:[
+          {id:'p1',title:'회의에서 다른 사람 의견을 듣겠다고 했지만 다음 회의에서도 대화를 대부분 독점했다',group:'대화',ph:30,pn:70,active:true,hint:'관찰한 행동과 말의 직접적 불일치 · 예시 가정'},
+          {id:'p2',title:'기한을 정해 자료를 보내기로 했지만 정해진 날짜까지 전달되지 않았다',group:'약속',ph:35,pn:60,active:true,hint:'기한·업무 난이도·불가피한 사정도 함께 확인'},
+          {id:'p3',title:'회의에서 발언 시간의 대부분을 혼자 사용했다',group:'대화',ph:45,pn:66,active:false,hint:'첫 번째 증거와 같은 회의에서 나왔다면 중복 주의'},
+          {id:'p4',title:'별도 독촉 없이 약속한 자료를 제때 전달했다',group:'실행',ph:83,pn:30,active:false,hint:'일회성보다 반복된 행동이 더 많은 정보를 줌'},
+          {id:'p5',title:'피드백을 받은 뒤 다음 회의 방식과 행동을 실제로 바꿨다',group:'실행',ph:78,pn:35,active:false,hint:'자기수정의 관찰 가능한 결과'}
+        ]},
+        game:{name:'게임 · 사업',icon:'◇',prior:35,hypothesis:'이번 게임이 출시 후 30일 재방문율 목표를 달성할 것이다',evidence:[
+          {id:'g1',title:'독립적인 테스트 이용자 다수가 자발적으로 다음 날 다시 플레이했다',group:'유저 테스트',ph:78,pn:35,active:true,hint:'표본과 모집 방식의 편향을 확인해야 함'},
+          {id:'g2',title:'테스트 참가자들이 게임을 재미있다고 평가했다',group:'유저 테스트',ph:70,pn:48,active:true,hint:'재방문 행동과 상관관계가 있어 중복 할인 고려'},
+          {id:'g3',title:'신규 유저의 튜토리얼 이탈률이 예상보다 높았다',group:'사용성',ph:24,pn:67,active:true,hint:'실제 분석 정의와 이탈 구간을 먼저 검토'},
+          {id:'g4',title:'독립적 유입 채널에서도 목표에 가까운 재방문율이 확인됐다',group:'유입',ph:82,pn:27,active:false,hint:'모집 채널이 다르면 독립 신호에 가까워짐'},
+          {id:'g5',title:'광고 영상은 조회됐지만 실제 게임 시작률이 낮았다',group:'유입',ph:36,pn:60,active:false,hint:'유입과 리텐션은 서로 다른 지표'}
+        ]},
+        info:{name:'정보 · 팩트체크',icon:'◈',prior:50,hypothesis:'이 기사에서 제시한 핵심 사실 주장이 정확할 것이다',evidence:[
+          {id:'i1',title:'기사의 핵심 수치가 공식 원자료에서 직접 확인됐다',group:'원자료',ph:90,pn:15,active:true,hint:'동일한 지표 정의와 기간인지 확인'},
+          {id:'i2',title:'독립된 기관의 별도 조사도 같은 결론을 제시했다',group:'독립 검증',ph:79,pn:28,active:true,hint:'독립성·연구 방법·기준이 실제로 다른지 확인'},
+          {id:'i3',title:'여러 매체가 동일한 최초 보도만 반복 인용했다',group:'재인용',ph:63,pn:59,active:false,hint:'기사 수가 많아도 독립적인 검증이 아닐 수 있음'},
+          {id:'i4',title:'핵심 수치의 출처나 산출 방법을 찾을 수 없다',group:'원자료',ph:27,pn:69,active:false,hint:'출처 부재가 사실 오류를 확정하는 건 아님'},
+          {id:'i5',title:'후속 검증에서 원문의 중요한 오류가 발견됐다',group:'독립 검증',ph:14,pn:77,active:false,hint:'오류가 핵심 주장에 직접 연관되는지 확인'}
+        ]},
+        custom:{name:'나만의 판단',icon:'＋',prior:50,hypothesis:'내가 검증하고 싶은 가설을 여기에 적어 보자',evidence:[]}
+      }
+    };
+    const deepCopy=x=>JSON.parse(JSON.stringify(x));
+    let state=deepCopy(initial), opened=new Set();
+    try { const data=JSON.parse(localStorage.getItem(STORAGE));if(data && data.cases && data.cases.people && data.cases.custom && Object.keys(initial.cases).every(k=>data.cases[k]))state=data; } catch(_){}
+    const $=id=>document.getElementById(id);
+    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+    state.correlation=clamp(Number(state.correlation)||0,0,100);
+    if(!state.cases[state.current])state.current='people';
+    function safe(s){return String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+    function current(){return state.cases[state.current];}
+    function persist(){try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch(_){}}
+    const fmt=x=>(Math.round(x*10)/10).toLocaleString('ko-KR',{maximumFractionDigits:1});
+    const pct=x=>`${fmt(x*100)}%`;
+    const logit=p=>Math.log(p/(1-p)); const logistic=x=>1/(1+Math.exp(-x));
+    function calc(){
+      const data=current(),prior=clamp(Number(data.prior)||50,1,99)/100;
+      let odds=logit(prior),count={},steps=[{name:'사전',value:prior}],effects=[];
+      (data.evidence||[]).forEach((ev,index)=>{
+        if(!ev.active)return;
+        const ph=clamp(Number(ev.ph)||1,1,99)/100,pn=clamp(Number(ev.pn)||1,1,99)/100,lr=ph/pn;
+        const cluster=ev.group||'기타',n=count[cluster]||0;
+        const weight=cluster==='독립'?1:1/(1+(state.correlation/100)*n);
+        count[cluster]=n+1;
+        const before=logistic(odds);odds+=Math.log(lr)*weight;
+        const after=logistic(odds);
+        effects.push({...ev,index,lr,weight,before,after,delta:after-before});
+        steps.push({name:`E${steps.length}`,value:after,title:ev.title});
+      });
+      const posterior=logistic(odds);
+      return {prior,posterior,steps,effects};
+    }
+    const colored=(lr)=>lr>1.03?'pos':lr<.97?'neg':'neutral';
+    function renderTabs(){
+      $('scenarios').innerHTML=Object.keys(state.cases).map(k=>{
+        const d=state.cases[k];return `<button type="button" class="scenario ${k===state.current?'active':''}" data-case="${safe(k)}" aria-pressed="${k===state.current}"><span aria-hidden="true">${safe(d.icon||'◎')}</span>${safe(d.name)}</button>`;
+      }).join('');
+      $('scenarios').querySelectorAll('[data-case]').forEach(btn=>btn.addEventListener('click',()=>{state.current=btn.dataset.case;opened.clear();persist();renderAll();}));
+    }
+    function renderFields(){
+      $('hypothesis').value=current().hypothesis||'';
+      $('priorRange').value=current().prior;$('priorLabel').textContent=`${current().prior}%`;rangeFill($('priorRange'));
+      $('correlation').value=state.correlation;$('corrLabel').textContent=state.correlation+'%';rangeFill($('correlation'));
+      $('scenarioLabel').textContent=state.current==='custom'?'내가 설정한 모델':'가정값 예시';
+    }
+    function rangeFill(input){const a=Number(input.min)||0,b=Number(input.max)||100,x=Number(input.value)||0;input.style.setProperty('--range-fill',100*(x-a)/(b-a)+'%');}
+    function renderEvidence(){
+      const data=current();$('activeCount').textContent=(data.evidence||[]).filter(e=>e.active).length;
+      $('evidenceList').innerHTML=(data.evidence||[]).length ? data.evidence.map((ev,index)=>{
+        const lr=Number(ev.ph)/Number(ev.pn),cls=colored(lr),sign=lr>1.03?'↗':lr<.97?'↘':'→';const open=opened.has(ev.id);
+        return `<div class="evidence ${ev.active?'enabled':''}" data-index="${index}">
+          <div class="evidence-main"><label class="check" title="증거를 반영"><input type="checkbox" data-toggle="${index}" ${ev.active?'checked':''} aria-label="${safe(ev.title)} 선택"></label>
+          <div class="ev-text"><span class="ev-title">${safe(ev.title)}</span><p><span class="tag">${safe(ev.group||'기타')}</span>　${safe(ev.hint||'예시 가정 · 직접 편집 가능')}</p></div>
+          <div class="ev-controls"><span class="impact ${cls}" data-lr="${index}">${sign} ${fmt(lr)}×</span><button type="button" class="tiny-btn" data-edit="${index}">${open?'접기':'수치 편집'}</button>${state.current==='custom'||String(ev.id).startsWith('user-')?`<button type="button" class="tiny-btn" data-remove="${index}">삭제</button>`:''}</div></div>
+          ${open?`<div class="evidence-detail"><div class="edit-grid"><div><label class="edit-l" for="ph-${index}">P(E | 가설 참) <b id="ph-l-${index}">${ev.ph}%</b></label><input id="ph-${index}" data-prob="ph" data-idx="${index}" type="range" min="1" max="99" value="${ev.ph}"><div class="edit-sub">가설이 참이면 이 증거가 나올 가능성</div></div><div><label class="edit-l" for="pn-${index}">P(E | 가설 거짓) <b id="pn-l-${index}">${ev.pn}%</b></label><input id="pn-${index}" data-prob="pn" data-idx="${index}" type="range" min="1" max="99" value="${ev.pn}"><div class="edit-sub">가설이 거짓이어도 이 증거가 나올 가능성</div></div></div></div>`:''}</div>`;
+      }).join('') : `<div style="border:1px dashed #dbe2ef;border-radius:12px;padding:23px;text-align:center;color:#8996ad;font-size:12px">아직 증거가 없어요. 아래에서 첫 증거를 추가해 보세요.</div>`;
+      $('evidenceList').querySelectorAll('[data-toggle]').forEach(el=>el.addEventListener('change',()=>{current().evidence[+el.dataset.toggle].active=el.checked;persist();renderEvidence();renderResult();}));
+      $('evidenceList').querySelectorAll('[data-edit]').forEach(el=>el.addEventListener('click',()=>{const id=current().evidence[+el.dataset.edit].id;if(opened.has(id))opened.delete(id);else opened.add(id);renderEvidence();}));
+      $('evidenceList').querySelectorAll('[data-remove]').forEach(el=>el.addEventListener('click',()=>{current().evidence.splice(+el.dataset.remove,1);persist();renderEvidence();renderResult();}));
+      $('evidenceList').querySelectorAll('[data-prob]').forEach(el=>{rangeFill(el);el.addEventListener('input',()=>{const e=current().evidence[+el.dataset.idx];e[el.dataset.prob]=Number(el.value);rangeFill(el);$(`${el.dataset.prob}-l-${el.dataset.idx}`).textContent=el.value+'%';const dest=$('evidenceList').querySelector(`[data-lr="${el.dataset.idx}"]`),lr=e.ph/e.pn,cls=colored(lr);dest.className=`impact ${cls}`;dest.textContent=`${lr>1.03?'↗':lr<.97?'↘':'→'} ${fmt(lr)}×`;persist();renderResult();});});
+    }
+    function renderResult(){
+      const {prior,posterior,steps,effects}=calc();const val=posterior*100,p=prior*100;
+      $('posteriorLabel').textContent=fmt(val);$('gauge').setAttribute('aria-label',`사후확률 ${fmt(val)}퍼센트`);
+      const circ=2*Math.PI*95,arc=$('arc');arc.style.strokeDasharray=circ;arc.style.strokeDashoffset=circ*(1-posterior);
+      arc.style.stroke=posterior>=prior?'#486ad6':'#cb876c';
+      let text;if(!effects.length)text='아직 증거를 적용하지 않았어요. 체크하면 확률이 바뀝니다.';
+      else if(val>=80)text='<strong>가설을 지지하는 쪽으로 기울었어요.</strong> 반대 증거도 찾아보세요.';
+      else if(val<=20)text='<strong>가설에 회의적인 쪽으로 기울었어요.</strong> 가정을 다시 확인하세요.';
+      else text='<strong>판단은 아직 열려 있어요.</strong> 증거 하나가 추가되면 다시 달라질 수 있습니다.';
+      $('judgement').innerHTML=text;
+      $('compareFill').style.width=fmt(val)+'%';$('compareDot').style.left=fmt(p)+'%';$('compareValue').textContent=`${fmt(p)}% → ${fmt(val)}%`;
+      const d=val-p;$('deltaText').innerHTML=Math.abs(d)<.05?'초기 판단과 동일합니다':`사전확률 대비 <b style="color:${d>0?'#278b74':'#c17d5c'}">${d>0?'+':''}${fmt(d)}%p</b> 변화`;
+      drawChart(steps);renderInsights(effects);
+    }
+    function drawChart(steps){
+      const svg=$('timeline'),W=340,H=160,left=32,right=12,top=17,bottom=30,x=i=>left+(W-left-right)*(steps.length===1?.5:i/(steps.length-1)),y=p=>top+(H-top-bottom)*(1-p);
+      const grid=[0,.25,.5,.75,1].map(v=>`<line x1="${left}" y1="${y(v)}" x2="${W-right}" y2="${y(v)}" stroke="#edf1f7" stroke-dasharray="${v===0?'0':'3,5'}"/><text x="${left-7}" y="${y(v)+4}" font-size="9" text-anchor="end" fill="#a3aebe">${v*100}</text>`).join('');
+      const points=steps.map((s,i)=>[x(i),y(s.value)]);
+      const path=points.map((p,i)=>`${i?'L':'M'}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(' ');
+      const circles=points.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===steps.length-1?5.3:3.8}" fill="${i===steps.length-1?'#486ad6':'#fff'}" stroke="#486ad6" stroke-width="2"/><text x="${p[0]}" y="${H-7}" text-anchor="middle" font-size="10" fill="#919db0">${i?'E'+i:'시작'}</text><title>${safe(steps[i].title||'사전확률')} ${pct(steps[i].value)}</title>`).join('');
+      svg.innerHTML=grid+`<path d="${path}" fill="none" stroke="#486ad6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`+circles;
+      $('steps').innerHTML=steps.map(s=>`<span class="step-item">${safe(s.name)} <strong>${pct(s.value)}</strong></span>`).join('');
+    }
+    function renderInsights(effects){
+      const target=$('insights');const positive=[...effects].filter(e=>e.delta>0).sort((a,b)=>b.delta-a.delta);const negative=[...effects].filter(e=>e.delta<0).sort((a,b)=>a.delta-b.delta);
+      let arr=[];
+      if(positive.length)arr.push({mode:'up',label:'가장 강한 지지 신호',desc:positive[0].title});
+      if(negative.length)arr.push({mode:'down',label:'가장 강한 반대 신호',desc:negative[0].title});
+      const duplicates=effects.filter(e=>e.weight<.999);if(duplicates.length)arr.push({mode:'info',label:`중복 증거 ${duplicates.length}개 할인됨`,desc:`같은 그룹의 신호를 독립된 새 증거처럼 과대평가하지 않도록 가중치를 낮췄어요.`});
+      if(!arr.length)arr.push({mode:'info',label:'중요한 것은 관찰된 행동',desc:'체크할 증거를 선택하고, 가정을 바꾸어 보세요.'});
+      arr.push({mode:'info',label:'가정이 결과를 만듭니다',desc:'수치는 실제 통계가 아닌 예시 가정입니다. 확률을 바꿨을 때 결론이 얼마나 민감한지 확인하세요.'});
+      target.innerHTML=arr.slice(0,4).map(a=>`<div class="insight"><div class="insight-symbol ${a.mode}">${a.mode==='up'?'↗':a.mode==='down'?'↘':'i'}</div><div class="insight-body"><b>${safe(a.label)}</b><p>${safe(a.desc)}</p></div></div>`).join('');
+    }
+    function renderAll(){renderTabs();renderFields();renderEvidence();renderResult();}
+    $('hypothesis').addEventListener('input',e=>{current().hypothesis=e.target.value;persist();});
+    $('priorRange').addEventListener('input',e=>{current().prior=Number(e.target.value);$('priorLabel').textContent=e.target.value+'%';rangeFill(e.target);persist();renderResult();});
+    $('correlation').addEventListener('input',e=>{state.correlation=Number(e.target.value);$('corrLabel').textContent=e.target.value+'%';rangeFill(e.target);persist();renderResult();});
+    function addVisible(show){$('addForm').classList.toggle('visible',show);$('toggleAdd').setAttribute('aria-expanded',String(show));if(show)$('newTitle').focus();}
+    $('toggleAdd').addEventListener('click',()=>addVisible(!$('addForm').classList.contains('visible')));
+    $('cancelAdd').addEventListener('click',()=>addVisible(false));
+    $('addForm').addEventListener('submit',e=>{e.preventDefault();const title=$('newTitle').value.trim(),ph=Number($('newPH').value),pn=Number($('newPN').value);if(!title||!Number.isFinite(ph)||!Number.isFinite(pn)||ph<1||ph>99||pn<1||pn>99)return alert('증거와 확률(1~99)을 확인해 주세요.');
+      current().evidence.push({id:'user-'+Date.now()+'-'+Math.round(Math.random()*9999),title,group:$('newGroup').value,ph,pn,hint:$('newHint').value.trim()||'사용자 입력 가정',active:true});
+      $('addForm').reset();addVisible(false);persist();renderEvidence();renderResult();});
+    $('resetBtn').addEventListener('click',()=>{if(!confirm('현재 시나리오를 예시 기본값으로 되돌릴까요?'))return;const key=state.current;state.cases[key]=deepCopy(initial.cases[key]);opened.clear();persist();renderAll();});
+    $('exportBtn').addEventListener('click',()=>{const d=current(),results=calc();const payload={title:'Bayes Lens 판단 기록',exportedAt:new Date().toISOString(),notice:'가상 혹은 사용자 주관적 가정 기반 시뮬레이션. 확률을 실제 검증 결과로 해석하지 마세요.',hypothesis:d.hypothesis,priorPercent:d.prior,posteriorPercent:Math.round(results.posterior*1000)/10,correlationHeuristicPercent:state.correlation,evidence:d.evidence};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='bayes-lens-judgement.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+    renderAll();
+  })();
+  </script>
+</body>
+</html>
